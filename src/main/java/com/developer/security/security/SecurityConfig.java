@@ -43,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
 		.formLogin().loginPage("/login").successForwardUrl("/").permitAll()
 		.and()
+		.rememberMe().tokenValiditySeconds(86400).key("secret")
+		.and()
 		.logout().logoutSuccessUrl("/login")
 	
 		;
