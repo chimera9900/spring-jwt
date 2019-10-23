@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -37,11 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/").permitAll()
 		.antMatchers("/blog/**").authenticated()
 		.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-		.antMatchers("/mng/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER")
+		.antMatchers("/mng/**").hasAuthority("ACCESS_TEST1")
 		.antMatchers("/api/**").authenticated()
 		.antMatchers("/users").hasAuthority("ROLE_ADMIN")
 		.and()
-		.formLogin().loginPage("/login").successForwardUrl("/").permitAll()
+		.formLogin().loginPage("/login").defaultSuccessUrl("/", true).permitAll()
 		.and()
 		.rememberMe().tokenValiditySeconds(86400).key("secret")
 		.and()
