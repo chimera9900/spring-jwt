@@ -41,7 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/api/**").authenticated()
 		.antMatchers("/users").hasAuthority("ROLE_ADMIN")
 		.and()
-		.httpBasic()
+		.formLogin().loginPage("/login").successForwardUrl("/").permitAll()
+		.and()
+		.logout().logoutSuccessUrl("/login")
+	
 		;
 		
 		http.headers().frameOptions().disable();
