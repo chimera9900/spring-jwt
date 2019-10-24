@@ -1,6 +1,7 @@
 package com.developer.security.utils;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -11,5 +12,7 @@ public class Config {
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new  BCryptPasswordEncoder();
 	}
+	
+
 
 }

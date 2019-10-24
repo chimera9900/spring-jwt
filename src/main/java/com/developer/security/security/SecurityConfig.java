@@ -3,13 +3,17 @@ package com.developer.security.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.developer.security.service.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -31,10 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		auth.inMemoryAuthentication()
 //		.withUser("admin").password("{noop}password")
 //		.authorities("ROLE_ADMIN", "ACCESS_TEST1","ACCESS_TEST2");
-		
-		
-		
-	
 	}
 	
 	@Bean
@@ -45,29 +45,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 return provider;
 	} 
 	
+	@Autowired
+	UserService userService;
 	
-	
+	@Override@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
+		http
+		.csrf().disable()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and()
+		.addFilter(new JwtAuthenticationFilter(authenticationManagerBean()))
+		.addFilter(new JwtAuthorizationFilter(authenticationManagerBean(), userService))
+		.authorizeRequests()
+//		.antMatchers("/login").permitAll()
+//		.and()
+//		.formLogin().loginPage("/login").defaultSuccessUrl("/", true).permitAll()
+//		.and()
+//		.rememberMe().tokenValiditySeconds(86400).key("secret")
+//		.and()
+//		.logout().logoutSuccessUrl("/login")
+//		.anyRequest().authenticated()
+		.antMatchers("/login").permitAll()
 		.antMatchers("/").permitAll()
 		.antMatchers("/blog/**").authenticated()
 		.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 		.antMatchers("/mng/**").hasAuthority("ACCESS_TEST1")
 		.antMatchers("/api/**").authenticated()
 		.antMatchers("/users").hasAuthority("ROLE_ADMIN")
-		.and()
-		.formLogin().loginPage("/login").defaultSuccessUrl("/", true).permitAll()
-		.and()
-		.rememberMe().tokenValiditySeconds(86400).key("secret")
-		.and()
-		.logout().logoutSuccessUrl("/login")
+		
 	
 		;
 		
-		http.headers().frameOptions().disable();
-		http.csrf().disable();
+//		http.headers().frameOptions().disable();
+		
 	}
 
 }
