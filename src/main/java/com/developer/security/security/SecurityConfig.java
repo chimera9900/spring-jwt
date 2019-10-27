@@ -37,13 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		.authorities("ROLE_ADMIN", "ACCESS_TEST1","ACCESS_TEST2");
 	}
 	
-	@Bean
-	public DaoAuthenticationProvider  daoAuthenticationProvider() {
-		 DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-		 provider.setPasswordEncoder(bCryptPasswordEncoder);
-		 provider.setUserDetailsService(userDetailsService);
-		 return provider;
-	} 
 	
 	@Autowired
 	UserService userService;
@@ -78,6 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/api/**").authenticated()
 		.antMatchers("/users").hasAuthority("ROLE_ADMIN")
 		
+		
+		
 	
 		;
 		
@@ -85,6 +80,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 	}
 
+	@Bean
+	public DaoAuthenticationProvider  daoAuthenticationProvider() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+		provider.setPasswordEncoder(bCryptPasswordEncoder);
+		provider.setUserDetailsService(userDetailsService);
+		return provider;
+	} 
 }
 
 

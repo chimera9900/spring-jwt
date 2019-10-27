@@ -34,22 +34,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		
-		UsernamePassword login = null;
+//		UsernamePassword login = null;
+//		
+//		try {
+//			login = new ObjectMapper().readValue(request.getInputStream(), UsernamePassword.class);
+//		}catch(IOException e) {
+//			throw new RuntimeException(e);
+//		}
 		
-		try {
-			login = new ObjectMapper().readValue(request.getInputStream(), UsernamePassword.class);
-		}catch(IOException e) {
-			throw new RuntimeException(e);
-		}
+		String username = obtainUsername(request);
+		String password = obtainPassword(request);
 		
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-				login.getUsername(), login.getPassword(), new ArrayList<>());
+//		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+//				login.getUsername(), login.getPassword(), new ArrayList<>());
 		
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 		Authentication auth = authenticationManager.authenticate(token);
 		return auth;
-//		String username = obtainUsername(request);
-//		String password = obtainPassword(request);
-		
 //		return getAuthenticationManager().authenticate(token);
 		
 	}
@@ -65,8 +66,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		.withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
 		.sign(Algorithm.HMAC384(JwtProperties.SECRET.getBytes()));
 		
+		JwtProperties.token = token;
+		System.out.println("token:!!!!!!!!!!!! " + token );
 		response.addHeader(JwtProperties.HEADER_STRING,JwtProperties.TOKEN_PREFIX + token);
-		
 		
 	}
 }

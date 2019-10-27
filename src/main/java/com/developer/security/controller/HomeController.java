@@ -3,14 +3,20 @@ package com.developer.security.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 
 import com.developer.security.model.User;
 import com.developer.security.service.UserService;
+import com.developer.security.utils.JwtProperties;
 
 @Controller
 @RequestMapping
@@ -22,20 +28,62 @@ public class HomeController {
 		return "index";
 	}
 	
+	@Autowired
+	RestTemplate rest;
+	
+	@RequestMapping(method = RequestMethod.GET,value = "/blog")
+	public String blog() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + JwtProperties.token );
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		
+		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/blog/index", HttpMethod.GET, 
+				entity, String.class);
+		
+		return responseEntity.getBody();
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.GET,value = "/admin")
+	public String admin() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + JwtProperties.token );
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		
+		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/admin/index", HttpMethod.GET, 
+				entity, String.class);
+		
+		return responseEntity.getBody();
+		
+	}
+	
+	@RequestMapping(method = RequestMethod.GET,value = "/mng")
+	public String mng() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + JwtProperties.token );
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		
+		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/mng/index", HttpMethod.GET, 
+				entity, String.class);
+		
+		return responseEntity.getBody();
+	
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value="/blog/index")
-	public @ResponseBody String blog() {
+	public @ResponseBody String blogdb() {
 		return "authenticated";
 	}
 	
 	
 	@RequestMapping(method = RequestMethod.GET, value="/admin/index")
-	public @ResponseBody String admin() {
+	public @ResponseBody String admindb() {
 		return "admin authenticated";
 	}
 	
 	
 	@RequestMapping(method = RequestMethod.GET, value="/mng/index")
-	public @ResponseBody String mng() {
+	public @ResponseBody String mngdb() {
 		return "management authenticated";
 	}
 	
