@@ -64,14 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		.logout().logoutSuccessUrl("/login")
 //		.anyRequest().authenticated()
 		.antMatchers("/login").permitAll()
-		.antMatchers("/").permitAll()
-		.antMatchers("/blog/**").authenticated()
-		.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-		.antMatchers("/mng/**").hasAuthority("ACCESS_TEST1")
-		.antMatchers("/api/**").authenticated()
-		.antMatchers("/users").hasAuthority("ROLE_ADMIN")
-		
-		
+		.antMatchers("/","/blog","/admin","/mng").permitAll()
+		.antMatchers("/api/blog/**").authenticated()
+		.antMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+		.antMatchers("/api/mng/**").hasAuthority("ACCESS_TEST1")
+//		.antMatchers("/api/**").authenticated()
+		.antMatchers("/api/users").hasAuthority("ROLE_ADMIN")
+		.and()
+		.logout().permitAll()
 		
 	
 		;

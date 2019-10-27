@@ -32,57 +32,57 @@ public class HomeController {
 	RestTemplate rest;
 	
 	@RequestMapping(method = RequestMethod.GET,value = "/blog")
-	public String blog() {
+	public @ResponseBody String blog() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + JwtProperties.token );
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 		
-		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/blog/index", HttpMethod.GET, 
+		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/api/blog/index", HttpMethod.GET, 
 				entity, String.class);
 		
-		return responseEntity.getBody();
+		return responseEntity.getBody().toString();
 		
 	}
 	
 	@RequestMapping(method = RequestMethod.GET,value = "/admin")
-	public String admin() {
+	public  @ResponseBody  String admin() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + JwtProperties.token );
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 		
-		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/admin/index", HttpMethod.GET, 
+		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/api/admin/index", HttpMethod.GET, 
 				entity, String.class);
 		
-		return responseEntity.getBody();
+		return responseEntity.getBody().toString();
 		
 	}
 	
 	@RequestMapping(method = RequestMethod.GET,value = "/mng")
-	public String mng() {
+	public  @ResponseBody  String mng() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + JwtProperties.token );
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 		
-		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/mng/index", HttpMethod.GET, 
+		ResponseEntity<String> responseEntity = rest.exchange("http://localhost:8080/api/mng/index", HttpMethod.GET, 
 				entity, String.class);
 		
-		return responseEntity.getBody();
+		return responseEntity.getBody().toString();
 	
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/blog/index")
+	@RequestMapping(method = RequestMethod.GET, value="/api/blog/index")
 	public @ResponseBody String blogdb() {
 		return "authenticated";
 	}
 	
 	
-	@RequestMapping(method = RequestMethod.GET, value="/admin/index")
+	@RequestMapping(method = RequestMethod.GET, value="/api/admin/index")
 	public @ResponseBody String admindb() {
 		return "admin authenticated";
 	}
 	
 	
-	@RequestMapping(method = RequestMethod.GET, value="/mng/index")
+	@RequestMapping(method = RequestMethod.GET, value="/api/mng/index")
 	public @ResponseBody String mngdb() {
 		return "management authenticated";
 	}
